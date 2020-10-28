@@ -681,7 +681,7 @@ class DB extends DbControl
 						$add = strlen($wh) > 0 ? ' WHERE ' : '';
 						$add .= $wh;
 					}
-					$sql = '
+					 $sql = '
 						SELECT 
 							status,
 							roomid,
@@ -781,7 +781,8 @@ class DB extends DbControl
 							 		`room_types`.`name` AS name,
 							 		`room_types`.`description` AS description,
 							 		`room_types`.`is_active` AS is_active,
-							 		`room_types`.`is_delete` AS is_delete
+							 		`room_types`.`is_delete` AS is_delete,
+							 		`room_categorys`.`locationid` AS locationid
 							 FROM
 							 	`room_categorys`
 							 LEFT JOIN
@@ -852,7 +853,8 @@ class DB extends DbControl
 					 		`room_types`.`name` AS name,
 					 		`room_types`.`description` AS description,
 					 		`room_types`.`is_active` AS is_active,
-					 		`room_types`.`is_delete` AS is_delete
+					 		`room_types`.`is_delete` AS is_delete,
+					 		`room_categorys`.`locationid` AS locationid
 
 						FROM
 							 `room_categorys`
@@ -940,7 +942,12 @@ class DB extends DbControl
 	
 	public function selectmaintenance($query, $num, $id = NULL)
 	{
-		
+		if(isset($query['locationid']) && $query['locationid'] != 3)
+		{
+			$rm = ' `maintenance_transactions`.`locationid` = '.$query['locationid'].' AND ';
+		}else{
+			$rm = '';		
+		}
 		try
 		{
 			if($num === 0)
@@ -1075,8 +1082,119 @@ class DB extends DbControl
 						FROM 
 							`maintenance_transactions` '.$add.' GROUP BY  status, maintenanceid ';
 				}
-				
+				elseif($num === 6)
+				{
+					
+						$add = '';
+						if(isset($query['starts']) && isset($query['ends']))
+						{
+							$add .= ' WHERE '.$rm.' `maintenance_transactions`.`transaction_date` BETWEEN CAST("'.$query['starts'].'" AS DATE) AND CAST("'.$query['ends'].'" AS DATE) ';
+						}
+					
+					 $sql = '
+						SELECT 
+							*,
+							`maintenance_type`.`categoryname` AS categoryname,
+							`maintenance_type`.`categoryid` AS categoryid,
+							`maintenance_type`.`maintenancename` AS maintenancename,
+							(SELECT name as nm FROM `room_types` WHERE `maintenance_transactions`.`location` = `room_types`.`id` LIMIT 1 ) AS roomname
 
+						FROM 
+							`maintenance_transactions` 
+						RIGHT JOIN 
+							( SELECT 
+								`maintenance_categorys`.`name` AS categoryname,
+								`maintenance_categorys`.`id` AS categoryid,
+								`maintenance_types`.`name` AS maintenancename,
+								`maintenance_types`.`id` AS id
+							  FROM
+							  	`maintenance_categorys`
+							  LEFT JOIN
+							  	`maintenance_types`
+							  ON
+							  	`maintenance_categorys`.`id` = `maintenance_types`.`categoryid`
+							  WHERE
+							  	`maintenance_categorys`.`id` = '.$query["categoryid"].'
+							)
+							AS maintenance_type
+						ON
+							`maintenance_transactions`.`maintenanceid` = `maintenance_type`.`id`
+						'.$add.' order by is_completed, status, transaction_date';
+				}
+				elseif($num === 7)
+				{
+					
+						$add = '';
+						if(isset($query['starts']) && isset($query['ends']))
+						{
+							$add .= ' WHERE '.$rm.' `maintenance_transactions`.`transaction_date` BETWEEN CAST("'.$query['starts'].'" AS DATE) AND CAST("'.$query['ends'].'" AS DATE) AND status = '.$query['status'].' ';
+						}
+					
+					  $sql = '
+						SELECT 
+							*,
+							`maintenance_type`.`categoryname` AS categoryname,
+							`maintenance_type`.`categoryid` AS categoryid,
+							`maintenance_type`.`maintenancename` AS maintenancename,
+							(SELECT name as nm FROM `room_types` WHERE `maintenance_transactions`.`location` = `room_types`.`id` LIMIT 1 ) AS roomname
+						FROM 
+							`maintenance_transactions` 
+						RIGHT JOIN 
+							( SELECT 
+								`maintenance_categorys`.`name` AS categoryname,
+								`maintenance_categorys`.`id` AS categoryid,
+								`maintenance_types`.`name` AS maintenancename,
+								`maintenance_types`.`id` AS id
+							  FROM
+							  	`maintenance_categorys`
+							  LEFT JOIN
+							  	`maintenance_types`
+							  ON
+							  	`maintenance_categorys`.`id` = `maintenance_types`.`categoryid`
+							  
+							)
+							AS maintenance_type
+						ON
+							`maintenance_transactions`.`maintenanceid` = `maintenance_type`.`id`
+						'.$add.' order by is_completed, status, transaction_date';
+				}
+				elseif($num === 8)
+				{
+					
+						$add = '';
+						if(isset($query['starts']) && isset($query['ends']))
+						{
+							$add .= ' WHERE '.$rm.' `maintenance_transactions`.`transaction_date` BETWEEN CAST("'.$query['starts'].'" AS DATE) AND CAST("'.$query['ends'].'" AS DATE) AND is_completed = '.$query['is_completed'].' ';
+						}
+					
+					 $sql = '
+						SELECT 
+							*,
+							`maintenance_type`.`categoryname` AS categoryname,
+							`maintenance_type`.`categoryid` AS categoryid,
+							`maintenance_type`.`maintenancename` AS maintenancename,
+							(SELECT name as nm FROM `room_types` WHERE `maintenance_transactions`.`location` = `room_types`.`id` LIMIT 1 ) AS roomname
+						FROM 
+							`maintenance_transactions` 
+						RIGHT JOIN 
+							( SELECT 
+								`maintenance_categorys`.`name` AS categoryname,
+								`maintenance_categorys`.`id` AS categoryid,
+								`maintenance_types`.`name` AS maintenancename,
+								`maintenance_types`.`id` AS id
+							  FROM
+							  	`maintenance_categorys`
+							  LEFT JOIN
+							  	`maintenance_types`
+							  ON
+							  	`maintenance_categorys`.`id` = `maintenance_types`.`categoryid`
+							  
+							)
+							AS maintenance_type
+						ON
+							`maintenance_transactions`.`maintenanceid` = `maintenance_type`.`id`
+						'.$add.' order by is_completed, status, transaction_date';
+				}
 	  			if($id)
 				{
 					$dbh = $this->construct();	

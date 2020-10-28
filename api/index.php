@@ -59,6 +59,10 @@ if($_SERVER['REQUEST_METHOD'] === 'GET')
 	if($cat === 'roomtransactionsummary'){$data = $op->selectroom($query, 5);}
 	if($cat === 'usertransactionsummary'){$data = $op->selectuser($query, 5);}
 	
+	if($cat === 'maint1'){$data = $op->selectmaintenance($query, 6);}
+	if($cat === 'maint2'){$data = $op->selectmaintenance($query, 7);}
+	if($cat === 'maint3'){$data = $op->selectmaintenance($query, 8);}
+
 	if($cat === 'roommaihis'){$data = $op->selectroom($query, 3);}
 	if($cat === 'roomaista'){$data = $op->selectroom($query, 4);}
 	if($cat === 'roominvsta'){$data = $op->selectroom($query, 6);}
