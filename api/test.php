@@ -5,120 +5,167 @@ include '../connect/connect.php';
 $op = new Db;
 
 
-// $name = 'jhmesu hamrod';
+$row = 1;
+ $rw = array();
+if (($handle = fopen("combine.csv", "r")) !== FALSE) {
+  while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+    $num = count($data);
+    //echo "<p> $num fields in line $row: <br /></p>\n";
+    
+    	echo '<pre>';
+    	if(strlen($data[13]) === 10)
+    	{
+    		$r = '0'.$data[13] ;
+    	}elseif(strlen($data[13]) === 11)
+    	{
+    		$r = $data[13] ;
+    	}
+    	elseif(strlen($data[13]) > 11)
+    	{
+    		$r = explode(" ", $data[13]);
+    		$r = $r[0];
+    	}else{
+    		$r = '';
+    	}
+    	$db =isset($data[7]) ? explode('/', $data[7]) : explode('/', '20/11/2020');
+    	//print_r($db);
+        $d = $db[2].'-'.$db[1].'-'.$db[0];
+       
+		$rw[$row]['admission_no'] = strlen($data[1]) == 4 ? trim($data[1]) : 'NONE';
+		$rw[$row]['surname'] = ucfirst(strtolower($data[2]));
+		$rw[$row]['firstname'] = ucfirst(strtolower($data[3]));
+		$rw[$row]['middlename'] = ucfirst(strtolower($data[4]));
+		$rw[$row]['gender'] = ucfirst(strtolower($data[5]));
+		$rw[$row]['religion'] = trim(ucfirst(strtolower($data[6])));
+		$rw[$row]['dob'] = $d;
+		$rw[$row]['schoolid'] = 1;
+		$rw[$row]['soo'] = trim(ucfirst(strtolower($data[8])));
+		$rw[$row]['lga'] = ucfirst(strtolower($data[9]));
+		$rw[$row]['cclass'] = strtolower($data[10]);
+		//$rw[$row]['g1_name'] = ucwords(strtolower($data[11]));
+		//$rw[$row]['g1_rel'] = ucfirst(strtolower($data[12]));
+		//$rw[$row]['g1_phone'] = $r;
+		//$rw[$row]['g1_email'] = strlen($data[14]) > 5 ?  strtolower($data[14]): '';
+		//$rw[$row]['g1_place'] = $data[15];
+		//$rw[$row]['g1_address'] = $data[16];
 
-// $ph =  array(
-// 		'j'=>0,
-// 		'h'=>1,
-// 		'm'=>2,
-// 		'e'=>3,
-// 		's'=>4,
-// 		'u'=>5,
-// 		'h'=>6,
-// 		'a'=>7,
-// 		'm'=>8,
-// 		'r'=>9,
-// 		'o'=>0,
-// 		'd'=>1,
+	echo $op->insert('students', $rw[$row]);
+		$row++;
 
-// 	);
-// $start = strtotime('2015-01-01');
-// $end = strtotime('2022-12-30');
-// $lodge = array(1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1);
-
-// for($i = 0; $i < 15000; $i++)
-// {
-// 	$names  = str_shuffle($name); 
-// 	$ph1 =  str_split(trim($names));
-// 	$ph2 = implode("",array_intersect($ph, array_flip($ph1)));	
-// 	$phone = '080'.substr($ph2, 0, 9);
-// 	$arr = array();
-// 	$roo =  rand(1, 30);
-// 	$booking = rand($start, $end);
-// 	$getlode = rand(0, 12);
-// 	$get_num = $lodge[$getlode];
-// 	$get_date = $get_num === 1 ? date("Y-m-d h:i:s", $booking) : '';
-
-// 	$space = rand(1000000, 1000000000);
-// 	$arr['roomid'] = $roo;
-// 	$arr['guestno'] = rand(1, 4);
-// 	$arr['transaction_date'] = date("Y-m-d h:i:s", $booking);
-// 	$arr['endbook'] = $get_date;
-// 	$arr['date_created'] = date("Y-m-d h:i:s", $booking - $space);
-// 	$arr['is_paid'] = $get_num;
-// 	$arr['is_lodged'] = $get_num;
-// 	$arr['fullname'] = $names;
-// 	$arr['phone'] = $phone;
-// 	$arr['duration'] = $space;
-// 	$arr['idtype'] = $phone;
-// 	$arr['idnumber'] = $ph2;
-// 	$arr['checker'] = date("Y-m-d", $booking - $space).':::'.$roo;
-	
-// 	try {
-// 		$op->insert('room_transactions', $arr);
-// 	} catch (Exception $e) {
-// 		print_r($e);
-// 	}
-	
-
-// }
-
-
-
-$name = 'jhmesu hamrod';
-
-$ph =  array(
-		'j'=>0,
-		'h'=>1,
-		'm'=>2,
-		'e'=>3,
-		's'=>4,
-		'u'=>5,
-		'h'=>6,
-		'a'=>7,
-		'm'=>8,
-		'r'=>9,
-		'o'=>0,
-		'd'=>1,
-
-	);
-$start = strtotime('2015-01-01');
-$end = strtotime('2022-12-30');
-$lodge = array(1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1);
-
-for($i = 0; $i < 4000; $i++)
-{
-	$names  = str_shuffle($name); 
-	$ph1 =  str_split(trim($names));
-	$ph2 = implode("",array_intersect($ph, array_flip($ph1)));	
-	$phone = '080'.substr($ph2, 0, 9);
-	$arr = array();
-	$roo =  rand(1, 24);
-	$roo1 =  rand(1, 30);
-	$booking = rand($start, $end);
-	$getlode = rand(0, 12);
-	$get_num = $lodge[$getlode];
-	$space = rand(1000000, 1000000000);
-	$get_date = $get_num === 1 ? date("Y-m-d h:i:s", $booking + $space) : '';
-
-	
-	$arr['maintenanceid'] = $roo;
-	$arr['status'] = rand(1, 4);
-	$arr['transaction_date'] = date("Y-m-d h:i:s", $booking);
-	$arr['date_completed'] = $get_date;
-	$arr['date_created'] = date("Y-m-d h:i:s", $booking);
-	$arr['is_completed'] = $get_num;
-	$arr['resolutiontime'] = $space;
-	$arr['location'] = $roo1;
-	
-	try {
-		echo $op->insert('maintenance_transactions', $arr);
-	} catch (Exception $e) {
-		print_r($e);
-	}
-	
-
+  }
+  fclose($handle);
 }
 
+$sr = array();
+$sr1 = array();
+foreach ($rw as $key => $value) 
+{
+	$nm = array();
+	$sr[$value['admission_no']][] = $value;
+}
+// foreach ($rw as $key => $value) 
+// {
+// 	$nm = array();
+// 	$nm['fullname'] = $value['surname']." ".$value['firstname']." ". $value['middlename'];
+// 	$nm['cclass'] = strtoupper($value['cclass']);
+// 	$nm['gender'] = $value['gender'];
+// 	$nm['dob'] = $value['dob'];
+// 	$nm['g1_phone'] = $value['g1_phone'];
+// 	$nm['area'] = $value['soo']." | ".$value['lga'];
+// 	$nm['pcg'] = $value['g1_name'];
+// 	$sr1[$value['admission_no']] = $nm;
+// }
+$nsr = array();
+foreach ($sr as $key => $value) 
+{
+	if(count($value) > 1)
+	{
+		$nsr[$key] = $value;
+	}else
+	{
+		$psr[] = $value[0];
+	}
+}
 
+//print_r($psr);
+$nph = array();
+foreach ($sr1 as $key => $value) 
+{
+	if(strlen($value['g1_phone']) == 0)
+	{
+		$nph[$key] = $value;
+	}
+}
 ?>
+<h4>STUDENTS DATA : NONE OR DUPLICATE ADMISSION NUMBER</h4>
+<table width='100%' border="1px">
+	<thead>
+		<tr>
+			<td width='50px'>ADMIN.</td>
+			<td>CLASS</td>
+			<td>FULLNAME</td>
+			<td>PHONE</td>
+			<td>GENDER</td>
+			<td>BIRTH</td>
+			<td>SOO/LGA</td>
+			<td>PRIMARY CARE GIVER</td>
+		</tr>
+	</thead>
+	<tbody>
+	<?php
+			foreach ($nsr as $key => $value) 
+			{
+				foreach ($value as $key1 => $value1)
+				{
+					echo '<tr>';
+					echo '<td style="align:center"><b>'.$key.'</b></td>';
+					echo '<td style="align:center">'.$value1['cclass'].'</td>';
+					echo '<td style="align:center">'.$value1['surname']." ".$value1['firstname']." ".$value1['middlename'].'</td>';
+					echo '<td style="align:center">'.$value1['g1_phone'].'</td>';
+					echo '<td style="align:center">'.$value1['gender'].'</td>';
+					echo '<td style="align:center">'.$value1['dob'].'</td>';
+					echo '<td style="align:center">'.$value1['religion'].'</td>';
+					echo '<td style="align:center">'.$value1['g1_name'].'</td>';
+					echo '</tr>';
+				}
+			}
+
+	?>
+</tbody>
+</table>
+
+<h4>STUDENTS DATA : NO PHONE NUMBERS</h4>
+<table width='100%' border="1px">
+	<thead>
+		<tr>
+			<td width='50px'>ADMIN.</td>
+			<td>CLASS</td>
+			<td>FULLNAME</td>
+			<td>PHONE</td>
+			<td>GENDER</td>
+			<td>BIRTH</td>
+			<td>SOO/LGA</td>
+			<td>PRIMARY CARE GIVER</td>
+		</tr>
+	</thead>
+	<tbody>
+	<?php
+			foreach ($nph as $key1 => $value1) 
+			{
+				
+					echo '<tr>';
+					echo '<td style="align:center"><b>'.$key1.'</b></td>';
+					echo '<td style="align:center">'.$value1['cclass'].'</td>';
+					echo '<td style="align:center">'.$value1['fullname'].'</td>';
+					echo '<td style="align:center">'.$value1['g1_phone'].'</td>';
+					echo '<td style="align:center">'.$value1['gender'].'</td>';
+					echo '<td style="align:center">'.$value1['dob'].'</td>';
+					echo '<td style="align:center">'.$value1['area'].'</td>';
+					echo '<td style="align:center">'.$value1['pcg'].'</td>';
+					echo '</tr>';
+				
+			}
+
+	?>
+</tbody>
+</table>

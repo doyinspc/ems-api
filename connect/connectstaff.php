@@ -4,15 +4,20 @@ require_once('common.php');
 
 class DB extends DbControl
 {
+	//var $host = 'localhost';
+	//var $db = 'stresert_hms_staff';
+	//var $user = 'stresert_root_ad';
+    //var $pass = 'stresertad1234';
+
 	var $host = 'localhost';
 	var $db = 'stresert_hms_staff';
 	var $user = 'root';
 	var $pass = '';
 
-	//var $host = "localhost:3306";
-	//var $db = "jickadun_elearn";
-	//var $user = "jickadun_admin";
-	//var $pass = '!@#$james414';
+	// var $host = 'localhost';
+	// var $db = 'stresert_hms';
+	// var $user = 'stresert_root_ad';
+	// var $pass = 'stresertad1234';
 
 	protected function ect($a, $b){return $a;}
 	protected function dct($a, $b){return $a;}
@@ -25,6 +30,7 @@ class DB extends DbControl
 		}
 		catch (PDOException $e)
 		{
+			
 			print ("Could not connect to server.\n");
 			print ("getMessage(): " . $e->getMessage () . "\n");
 		}
@@ -265,658 +271,7 @@ class DB extends DbControl
 				);
 			
 			   $this->createdbtable($sc_table, $sc);
-			}
-	
-	public function selectinventory($query, $num, $id = NULL)
-	{
-		
-		try
-		{
-			if($num === 0)
-				{
-					if(isset($id) && $id !== NULL)
-					{
-						$add = 'WHERE `is_delete` = 0 AND `id` = '.$id;
-					}
-					else{$add = 'WHERE `is_delete` = 0';}
-					$sql = '
-						SELECT 
-							*,
-							(SELECT COUNT(*) as mid FROM `inventory_types` WHERE `inventory_types`.`categoryid` = `inventory_categorys`.`id` ) AS qty
-						FROM 
-							`inventory_categorys` '.$add;
-				}
-				if($num === 1)
-				{
-					if(isset($id) && $id !== NULL)
-					{
-						$add = 'WHERE `is_delete` = 0 AND `id` = '.$id;
-					}
-					else{$add = ' WHERE `is_delete` = 0 ';}
-					$sql = '
-						SELECT 
-							*,
-							(SELECT name as nm FROM `inventory_categorys` WHERE `inventory_types`.`categoryid` = `inventory_categorys`.`id` LIMIT 1 ) AS categoryname
-						FROM 
-							`inventory_types` '.$add;
-				}
-				elseif($num === 2)
-				{
-					if(isset($id) && $id !== NULL)
-					{
-						$add = 'WHERE `is_delete` = 0 AND `id` = '.$id;
-					}
-					else{$add = 'WHERE `is_delete` = 0';}
-					$sql = '
-						SELECT 
-							*,
-							(SELECT name as nm FROM `inventory_categorys` WHERE `inventory_types`.`categoryid` = `inventory_categorys`.`id` LIMIT 1 ) AS categoryname
-						FROM 
-							`inventory_types` '.$add;
-				}
-				elseif($num === 3)
-				{
-					if(isset($id) && $id !== NULL)
-					{
-						$add = 'WHERE `is_delete` = 0 AND `id` = '.$id;
-					}
-					else{
-						$add = 'WHERE `is_delete` = 0 AND `categoryid` = '.$query['categoryid'];
-					}
-					$sql = '
-						SELECT 
-							*,
-							(SELECT name as nm FROM `inventory_categorys` WHERE `inventory_types`.`categoryid` = `inventory_categorys`.`id` LIMIT 1 ) AS categoryname
-						FROM 
-							`inventory_types` '.$add;
-				}
-				elseif($num === 4)
-				{
-					if(isset($id) && $id !== NULL)
-					{
-						$add = 'WHERE `id` = '.$id;
-					}
-					else
-					{
-						$wh = '';
-						if(isset($query['starts']) && isset($query['ends']) && $query['starts'] !== NULL && $query['starts'] !== '' && $query['ends'] !== NULL && $query['ends'] !== '')
-						{
-							$wh .= ' `inventory_transactions`.`transaction_date` BETWEEN CAST("'.$query['starts'].'" AS DATE) AND CAST("'.$query['ends'].'" AS DATE) ';
-						}
-						if(isset($query['inventoryid']) &&  $query['inventoryid'] !== '')
-						{
-							$wh .= strlen($wh) > 0 ? ' AND ' : '';
-							$wh .= ' `inventory_transactions`.`inventoryid` = '.$query['inventoryid'];
-
-						}
-						if(isset($query['categoryid']) &&  $query['categoryid'] !== '')
-						{
-							$wh .= strlen($wh) > 0 ? ' AND ' : '';
-							$wh .= ' `inventory_transactions`.`categoryid` = '.$query['categoryid'];
-
-						}
-						$add = strlen($wh) > 0 ? ' WHERE ' : '';
-						$add .= $wh;
-					}
-					
-						
-					
-					$sql = '
-						SELECT 
-							*,
-							(SELECT name as nm FROM `inventory_categorys` WHERE `inventory_transactions`.`categoryid` = `inventory_categorys`.`id` LIMIT 1 ) AS categoryname,
-							(SELECT name as nm FROM `inventory_types` WHERE `inventory_transactions`.`categoryid` = `inventory_types`.`id` LIMIT 1 ) AS inventoryname,
-							(SELECT surname as nm FROM `user_types` WHERE `inventory_transactions`.`userid` = `user_types`.`id` LIMIT 1 ) AS username
-						FROM 
-							`inventory_transactions` '.$add.' order by transaction_date DESC';;
-				}
-				elseif($num === 5)
-				{
-					if(isset($id) && $id !== NULL)
-					{
-						$add = 'WHERE `id` = '.$id;
-					}
-					else
-					{
-						$wh = '';
-						if(isset($query['starts']) && isset($query['ends']) && $query['starts'] !== NULL && $query['starts'] !== '' && $query['ends'] !== NULL && $query['ends'] !== '')
-						{
-							$wh .= ' `inventory_transactions`.`transaction_date` BETWEEN CAST("'.$query['starts'].'" AS DATE) AND CAST("'.$query['ends'].'" AS DATE) ';
-						}
-						if(isset($query['inventoryid']) &&  $query['inventoryid'] !== '')
-						{
-							$wh .= strlen($wh) > 0 ? ' AND ' : '';
-							$wh .= ' `inventory_transactions`.`inventoryid` = '.$query['inventoryid'];
-
-						}
-						if(isset($query['categoryid']) &&  $query['categoryid'] !== '')
-						{
-							$wh .= strlen($wh) > 0 ? ' AND ' : '';
-							$wh .= ' `inventory_transactions`.`categoryid` = '.$query['categoryid'];
-
-						}
-						$add = strlen($wh) > 0 ? ' WHERE ' : '';
-						$add .= $wh;
-					}
-					$sql = '
-						SELECT 
-							status,
-							inventoryid,
-							(SELECT name as nm FROM `inventory_types` WHERE `inventory_transactions`.`categoryid` = `inventory_types`.`id` LIMIT 1 ) AS inventoryname,
-							SUM(quantity) AS qty
-						FROM 
-							`inventory_transactions` '.$add.' GROUP BY  status, inventoryid ';
-				}
-				
-
-	  			if($id)
-				{
-					$dbh = $this->construct();	
-					$sth = $dbh->query($sql);
-					while ($row = $sth->fetch(PDO::FETCH_OBJ))
-					return $row;
-				}
-				else
-				{
-					$rows = array();
-					$dbh = $this->construct();	
-					$sth = $dbh->query($sql);
-					while ($row = $sth->fetch(PDO::FETCH_OBJ))
-					{
-						array_push($rows, $row);
-					}
-					return $rows;
-				}
-			
-				
-		}
-		catch (PDOException $e)
-		{
-		$msg = $db.":";
-		$msg .=  ("getMessage(): " . $e->getMessage() . "\n");
-		return $msg;
-		}
-		
-	}
-
-	public function selectroom($query, $num, $id = NULL)
-	{
-		
-		try
-		{
-			if($num === 0)
-				{
-					if(isset($id) && $id !== NULL)
-					{
-						$add = 'WHERE `is_delete` = 0 AND `id` = '.$id;
-					}
-					else{$add = 'WHERE `is_delete` = 0';}
-					$sql = '
-						SELECT 
-							*,
-							(SELECT COUNT(*) as mid FROM `room_types` WHERE `room_types`.`categoryid` = `room_categorys`.`id` ) AS qty
-						FROM 
-							`room_categorys` '.$add;
-				}
-				if($num === 1)
-				{
-					if(isset($id) && $id !== NULL)
-					{
-						$add = 'WHERE `is_delete` = 0 AND `id` = '.$id;
-					}
-					else{$add = ' WHERE `is_delete` = 0';}
-					$sql = '
-						SELECT 
-							*,
-							(SELECT name as nm FROM `room_categorys` WHERE `room_types`.`categoryid` = `room_categorys`.`id` LIMIT 1 ) AS categoryname
-						FROM 
-							`room_types` '.$add;
-				}
-				elseif($num === 2)
-				{
-					if(isset($id) && $id !== NULL)
-					{
-						$add = 'WHERE `is_delete` = 0 AND `id` = '.$id;
-					}
-					else{$add = 'WHERE `is_delete` = 0';}
-					$sql = '
-						SELECT 
-							*,
-							(SELECT name as nm FROM `room_categorys` WHERE `room_types`.`categoryid` = `room_categorys`.`id` LIMIT 1 ) AS categoryname
-						FROM 
-							`room_types` '.$add;
-				}
-				elseif($num === 3)
-				{
-					if(isset($id) && $id !== NULL)
-					{
-						$add = 'WHERE `is_delete` = 0 AND `id` = '.$id;
-					}
-					else{
-						$add = 'WHERE `is_delete` = 0 AND `categoryid` = '.$query['categoryid'];
-					}
-					$sql = '
-						SELECT 
-							*,
-							(SELECT name as nm FROM `room_categorys` WHERE `room_types`.`categoryid` = `room_categorys`.`id` LIMIT 1 ) AS categoryname
-						FROM 
-							`room_types` '.$add;
-				}
-				elseif($num === 4)
-				{
-					if(isset($id) && $id !== NULL)
-					{
-						$add = 'WHERE `id` = '.$id;
-					}
-					else
-					{
-						$wh = '';
-						if(isset($query['starts']) && isset($query['ends']) && $query['starts'] !== NULL && $query['starts'] !== '' && $query['ends'] !== NULL && $query['ends'] !== '')
-						{
-							$wh .= ' `room_transactions`.`transaction_date` BETWEEN CAST("'.$query['starts'].'" AS DATE) AND CAST("'.$query['ends'].'" AS DATE) ';
-						}
-						if(isset($query['roomid']) &&  $query['roomid'] !== '')
-						{
-							$wh .= strlen($wh) > 0 ? ' AND ' : '';
-							$wh .= ' `room_transactions`.`roomid` = '.$query['roomid'];
-
-						}
-						
-						$add = strlen($wh) > 0 ? ' WHERE ' : '';
-						$add .= $wh;
-					}
-					
-						
-					
-					  $sql = '
-						SELECT 
-							*,
-							
-							(SELECT name as nm FROM `room_types` WHERE `room_transactions`.`roomid` = `room_types`.`id` LIMIT 1 ) AS roomname,
-							(SELECT surname as nm FROM `user_types` WHERE `room_transactions`.`userid` = `user_types`.`id` LIMIT 1 ) AS username
-						FROM 
-							`room_transactions` '.$add.' order by transaction_date DESC';;
-				}
-				elseif($num === 5)
-				{
-					if(isset($id) && $id !== NULL)
-					{
-						$add = 'WHERE `id` = '.$id;
-					}
-					else
-					{
-						$wh = '';
-						if(isset($query['starts']) && isset($query['ends']) && $query['starts'] !== NULL && $query['starts'] !== '' && $query['ends'] !== NULL && $query['ends'] !== '')
-						{
-							$wh .= ' `room_transactions`.`transaction_date` BETWEEN CAST("'.$query['starts'].'" AS DATE) AND CAST("'.$query['ends'].'" AS DATE) ';
-						}
-						if(isset($query['roomid']) &&  $query['roomid'] !== '')
-						{
-							$wh .= strlen($wh) > 0 ? ' AND ' : '';
-							$wh .= ' `room_transactions`.`roomid` = '.$query['roomid'];
-
-						}
-						if(isset($query['categoryid']) &&  $query['categoryid'] !== '')
-						{
-							$wh .= strlen($wh) > 0 ? ' AND ' : '';
-							$wh .= ' `room_transactions`.`categoryid` = '.$query['categoryid'];
-
-						}
-						$add = strlen($wh) > 0 ? ' WHERE ' : '';
-						$add .= $wh;
-					}
-					$sql = '
-						SELECT 
-							status,
-							roomid,
-							(SELECT name as nm FROM `room_types` WHERE `room_transactions`.`categoryid` = `room_types`.`id` LIMIT 1 ) AS roomname,
-							SUM(quantity) AS qty
-						FROM 
-							`room_transactions` '.$add.' GROUP BY  status, roomid ';
-				}
-				elseif($num === 6)
-				{
-					if(isset($id) && $id !== NULL)
-					{
-						$add = 'WHERE `id` = '.$id;
-					}
-					else
-					{
-						$wh = '';
-						if(isset($query['starts']) && isset($query['ends']) && $query['starts'] !== NULL && $query['starts'] !== '' && $query['ends'] !== NULL && $query['ends'] !== '')
-						{
-							$wh .= ' `room_transactions`.`transaction_date` BETWEEN CAST("'.$query['starts'].'" AS DATE) AND CAST("'.$query['ends'].'" AS DATE) ';
-						}
-						if(isset($query['roomid']) &&  $query['roomid'] !== '')
-						{
-							$wh .= strlen($wh) > 0 ? ' AND ' : '';
-							$wh .= ' `room_transactions`.`roomid` = '.$query['roomid'];
-
-						}
-						
-						$add = strlen($wh) > 0 ? ' WHERE ' : '';
-						$add .= $wh;
-					}
-					
-						
-					
-					  $sql = '
-						SELECT 
-							*,
-							
-							(SELECT name as nm FROM `room_types` WHERE `room_transactions`.`roomid` = `room_types`.`id` LIMIT 1 ) AS roomname,
-							(SELECT surname as nm FROM `user_types` WHERE `room_transactions`.`userid` = `user_types`.`id` LIMIT 1 ) AS username
-						FROM 
-							`room_transactions` '.$add.' order by transaction_date DESC';;
-				}
-				elseif($num === 7)
-				{
-					if(isset($id) && $id !== NULL)
-					{
-						$add = 'WHERE `id` = '.$id;
-					}
-					else
-					{
-						$wh = '';
-						if(isset($query['starts']) && isset($query['ends']) && $query['starts'] !== NULL && $query['starts'] !== '' && $query['ends'] !== NULL && $query['ends'] !== '')
-						{
-							$wh .= ' `room_transactions`.`transaction_date` BETWEEN CAST("'.$query['starts'].'" AS DATE) AND CAST("'.$query['ends'].'" AS DATE) ';
-						}
-						if(isset($query['roomid']) &&  $query['roomid'] !== '')
-						{
-							$wh .= strlen($wh) > 0 ? ' AND ' : '';
-							$wh .= ' `room_transactions`.`roomid` = '.$query['roomid'];
-
-						}
-						
-						$add = strlen($wh) > 0 ? ' WHERE ' : '';
-						$add .= $wh;
-					}
-					$sql = '
-						SELECT 
-							status,
-							roomid,
-							(SELECT name as nm FROM `room_types` WHERE `room_transactions`.`categoryid` = `room_types`.`id` LIMIT 1 ) AS roomname,
-							SUM(quantity) AS qty
-						FROM 
-							`room_transactions` '.$add.' GROUP BY phone ';
-				}
-
-	  			if($id)
-				{
-					$dbh = $this->construct();	
-					$sth = $dbh->query($sql);
-					while ($row = $sth->fetch(PDO::FETCH_OBJ))
-					return $row;
-				}
-				else
-				{
-					$rows = array();
-					$dbh = $this->construct();	
-					$sth = $dbh->query($sql);
-					while ($row = $sth->fetch(PDO::FETCH_OBJ))
-					{
-						array_push($rows, $row);
-					}
-					return $rows;
-				}
-			
-				
-		}
-		catch (PDOException $e)
-		{
-		$msg = $db.":";
-		$msg .=  ("getMessage(): " . $e->getMessage() . "\n");
-		return $msg;
-		}
-		
-	}
-	public function selectroomstatistics($date, $num)
-	{
-		
-		try
-		{
-				if($num === 1)
-				{
-					$sql = '
-						SELECT 
-							*,
-							`room_transactions`.`id` AS id,
-							`room_types`.`id` AS cid,
-							(SELECT name as nm FROM `room_categorys` WHERE `room_types`.`categoryid` = `room_categorys`.`id` LIMIT 1 ) AS categoryname
-						FROM 
-							`room_transactions` 
-						LEFT JOIN
-							 `room_types`
-						ON
-							 `room_transactions`.`roomid` = `room_types`.`id`
-						WHERE 
-							 DATE(`room_transactions`.`transaction_date`) = "'.$date.'"';
-				}
-
-				if($num === 2)
-				{
-					$sql = '
-						SELECT 
-							COUNT(`room_transactions`.`id`) AS id,
-							COUNT(DISTINCT `room_transactions`.`phone`) AS guest,
-							MONTH(`room_transactions`.`transaction_date`) AS month,
-							YEAR(`room_transactions`.`transaction_date`) AS year,
-							SUM(`room_transactions`.`id`) AS duration,
-							(SELECT COUNT(id) AS num FROM room_types) AS roomnum
-						FROM 
-							`room_transactions` 
-						WHERE `room_transactions`.`transaction_date` BETWEEN CAST("'.$date['startdate'].'" AS DATE) AND CAST("'.$date['enddate'].'" AS DATE)
-						GROUP BY 
-							 YEAR(`room_transactions`.`transaction_date`), MONTH(`room_transactions`.`transaction_date`)';
-				}
-				if($num === 3)
-				{
-					$sql = '
-						SELECT 
-							COUNT(`room_transactions`.`id`) AS id,
-							MONTH(`room_transactions`.`transaction_date`) AS month,
-							YEAR(`room_transactions`.`transaction_date`) AS year,
-							SUM(`room_transactions`.`id`) AS duration,
-							(SELECT COUNT(id) AS num FROM room_types) AS roomnum
-						FROM 
-							`room_transactions` 
-						WHERE `room_transactions`.`transaction_date` BETWEEN CAST("'.$date['startdate'].'" AS DATE) AND CAST("'.$date['enddate'].'" AS DATE)
-						GROUP BY 
-							 YEAR(`room_transactions`.`transaction_date`), MONTH(`room_transactions`.`transaction_date`)';
-				}
-				
-
-	  			
-					$rows = array();
-					$dbh = $this->construct();	
-					$sth = $dbh->query($sql);
-					while ($row = $sth->fetch(PDO::FETCH_OBJ))
-					{
-						array_push($rows, $row);
-					}
-					return $rows;
-				
-			
-				
-		}
-		catch (PDOException $e)
-		{
-		$msg = $db.":";
-		$msg .=  ("getMessage(): " . $e->getMessage() . "\n");
-		return $msg;
-		}
-		
-	}
-	
-	public function selectmaintenance($query, $num, $id = NULL)
-	{
-		
-		try
-		{
-			if($num === 0)
-				{
-					if(isset($id) && $id !== NULL)
-					{
-						$add = 'WHERE `is_delete` = 0 AND `id` = '.$id;
-					}
-					else{$add = 'WHERE `is_delete` = 0';}
-					$sql = '
-						SELECT 
-							*,
-							(SELECT COUNT(*) as mid FROM `maintenance_types` WHERE `maintenance_types`.`categoryid` = `maintenance_categorys`.`id` ) AS qty
-						FROM 
-							`maintenance_categorys` '.$add;
-				}
-				if($num === 1)
-				{
-					if(isset($id) && $id !== NULL)
-					{
-						$add = 'WHERE `is_delete` = 0 AND `id` = '.$id;
-					}
-					else{$add = ' WHERE `is_delete` = 0 ';}
-					$sql = '
-						SELECT 
-							*,
-							(SELECT name as nm FROM `maintenance_categorys` WHERE `maintenance_types`.`categoryid` = `maintenance_categorys`.`id` LIMIT 1 ) AS categoryname
-						FROM 
-							`maintenance_types` '.$add;
-				}
-				elseif($num === 2)
-				{
-					if(isset($id) && $id !== NULL)
-					{
-						$add = 'WHERE `is_delete` = 0 AND `id` = '.$id;
-					}
-					else{$add = 'WHERE `is_delete` = 0';}
-					$sql = '
-						SELECT 
-							*,
-							(SELECT name as nm FROM `maintenance_categorys` WHERE `maintenance_types`.`categoryid` = `maintenance_categorys`.`id` LIMIT 1 ) AS categoryname
-						FROM 
-							`maintenance_types` '.$add;
-				}
-				elseif($num === 3)
-				{
-					if(isset($id) && $id !== NULL)
-					{
-						$add = 'WHERE `is_delete` = 0 AND `id` = '.$id;
-					}
-					else{
-						$add = 'WHERE `is_delete` = 0 AND `categoryid` = '.$query['categoryid'];
-					}
-					$sql = '
-						SELECT 
-							*,
-							(SELECT name as nm FROM `maintenance_categorys` WHERE `maintenance_types`.`categoryid` = `maintenance_categorys`.`id` LIMIT 1 ) AS categoryname
-						FROM 
-							`maintenance_types` '.$add;
-				}
-				elseif($num === 4)
-				{
-					if(isset($id) && $id !== NULL)
-					{
-						$add = 'WHERE `id` = '.$id;
-					}
-					else
-					{
-						$wh = '';
-						if(isset($query['starts']) && isset($query['ends']) && $query['starts'] !== NULL && $query['starts'] !== '' && $query['ends'] !== NULL && $query['ends'] !== '')
-						{
-							$wh .= ' `maintenance_transactions`.`transaction_date` BETWEEN CAST("'.$query['starts'].'" AS DATE) AND CAST("'.$query['ends'].'" AS DATE) ';
-						}
-						if(isset($query['maintenanceid']) &&  $query['maintenanceid'] !== '')
-						{
-							$wh .= strlen($wh) > 0 ? ' AND ' : '';
-							$wh .= ' `maintenance_transactions`.`location` = '.$query['maintenanceid'];
-
-						}
-						
-						$add = strlen($wh) > 0 ? ' WHERE ' : '';
-						$add .= $wh;
-					}
-					
-						
-					
-					 $sql = '
-						SELECT 
-							*,
-							(SELECT name FROM maintenance_categorys WHERE `maintenance_categorys`.`id` =  (SELECT categoryid as nm FROM `maintenance_types` WHERE `maintenance_transactions`.`maintenanceid` = `maintenance_types`.`id` LIMIT 1 ) ) AS categoryname,
-							(SELECT categoryid as nm FROM `maintenance_types` WHERE `maintenance_transactions`.`maintenanceid` = `maintenance_types`.`id` LIMIT 1 ) AS categoryid,
-							(SELECT name as nm FROM `maintenance_types` WHERE `maintenance_transactions`.`maintenanceid` = `maintenance_types`.`id` LIMIT 1 ) AS maintenancename,
-							(SELECT name as nm FROM `room_types` WHERE `maintenance_transactions`.`location` = `room_types`.`id` LIMIT 1 ) AS roomname,
-							(SELECT surname as nm FROM `user_types` WHERE `maintenance_transactions`.`userid` = `user_types`.`id` LIMIT 1 ) AS username
-						FROM 
-							`maintenance_transactions` '.$add.' order by transaction_date DESC LIMIT 200';
-				}
-				elseif($num === 5)
-				{
-					if(isset($id) && $id !== NULL)
-					{
-						$add = 'WHERE `id` = '.$id;
-					}
-					else
-					{
-						$wh = '';
-						if(isset($query['starts']) && isset($query['ends']) && $query['starts'] !== NULL && $query['starts'] !== '' && $query['ends'] !== NULL && $query['ends'] !== '')
-						{
-							$wh .= ' `maintenance_transactions`.`transaction_date` BETWEEN CAST("'.$query['starts'].'" AS DATE) AND CAST("'.$query['ends'].'" AS DATE) ';
-						}
-						if(isset($query['maintenanceid']) &&  $query['maintenanceid'] !== '')
-						{
-							$wh .= strlen($wh) > 0 ? ' AND ' : '';
-							$wh .= ' `maintenance_transactions`.`maintenanceid` = '.$query['maintenanceid'];
-
-						}
-						if(isset($query['categoryid']) &&  $query['categoryid'] !== '')
-						{
-							$wh .= strlen($wh) > 0 ? ' AND ' : '';
-							$wh .= ' `maintenance_transactions`.`categoryid` = '.$query['categoryid'];
-
-						}
-						$add = strlen($wh) > 0 ? ' WHERE ' : '';
-						$add .= $wh;
-					}
-					$sql = '
-						SELECT 
-							status,
-							maintenanceid,
-							(SELECT name as nm FROM `maintenance_types` WHERE `maintenance_transactions`.`categoryid` = `maintenance_types`.`id` LIMIT 1 ) AS maintenancename,
-							SUM(quantity) AS qty
-						FROM 
-							`maintenance_transactions` '.$add.' GROUP BY  status, maintenanceid ';
-				}
-				
-
-	  			if($id)
-				{
-					$dbh = $this->construct();	
-					$sth = $dbh->query($sql);
-					while ($row = $sth->fetch(PDO::FETCH_OBJ))
-					return $row;
-				}
-				else
-				{
-					$rows = array();
-					$dbh = $this->construct();	
-					$sth = $dbh->query($sql);
-					while ($row = $sth->fetch(PDO::FETCH_OBJ))
-					{
-						array_push($rows, $row);
-					}
-					return $rows;
-				}
-			
-				
-		}
-		catch (PDOException $e)
-		{
-		$msg = $db.":";
-		$msg .=  ("getMessage(): " . $e->getMessage() . "\n");
-		return $msg;
-		}
-		
-	}
+			}	
 	
 	public function selectuser($query, $num, $id = NULL)
 	{
@@ -1012,20 +367,15 @@ class DB extends DbControl
 						$wh = '';
 						if(isset($query['starts']) && isset($query['ends']) && $query['starts'] !== NULL && $query['starts'] !== '' && $query['ends'] !== NULL && $query['ends'] !== '')
 						{
-							$wh .= ' `user_transactions`.`transaction_date` BETWEEN CAST("'.$query['starts'].'" AS DATE) AND CAST("'.$query['ends'].'" AS DATE) ';
+							$wh .= ' `user_transactions`.`date_created` BETWEEN CAST("'.$query['starts'].'" AS DATE) AND CAST("'.$query['ends'].'" AS DATE) ';
 						}
-						if(isset($query['userid']) &&  $query['userid'] !== '')
+						if(isset($query['staffid']) &&  $query['staffid'] !== '')
 						{
 							$wh .= strlen($wh) > 0 ? ' AND ' : '';
-							$wh .= ' `user_transactions`.`userid` = '.$query['userid'];
+							$wh .= ' `user_transactions`.`staffid` = '.$query['staffid'];
 
 						}
-						if(isset($query['categoryid']) &&  $query['categoryid'] !== '')
-						{
-							$wh .= strlen($wh) > 0 ? ' AND ' : '';
-							$wh .= ' `user_transactions`.`categoryid` = '.$query['categoryid'];
-
-						}
+						
 						$add = strlen($wh) > 0 ? ' WHERE ' : '';
 						$add .= $wh;
 					}
@@ -1035,11 +385,9 @@ class DB extends DbControl
 					$sql = '
 						SELECT 
 							*,
-							(SELECT name as nm FROM `user_categorys` WHERE `user_transactions`.`categoryid` = `user_categorys`.`id` LIMIT 1 ) AS categoryname,
-							(SELECT name as nm FROM `user_types` WHERE `user_transactions`.`categoryid` = `user_types`.`id` LIMIT 1 ) AS username,
-							(SELECT surname as nm FROM `user_types` WHERE `user_transactions`.`userid` = `user_types`.`id` LIMIT 1 ) AS username
+							(SELECT CONCAT(surname, " ", firstname)as namz FROM `user_types` WHERE `user_types`.`id` = `user_transactions`.`staffid` ) AS fullname
 						FROM 
-							`user_transactions` '.$add.' order by transaction_date DESC';;
+							`user_transactions` '.$add.' order by date_created DESC';;
 				}
 				elseif($num === 5)
 				{
@@ -1078,7 +426,164 @@ class DB extends DbControl
 						FROM 
 							`user_transactions` '.$add.' GROUP BY  status, userid ';
 				}
-				
+				elseif($num === 7)
+				{
+					if(isset($id) && $id !== NULL)
+					{
+						$add = 'WHERE `is_delete` = 0 AND `id` = '.$id;
+					}
+					else{$add = 'WHERE `is_delete` = 0';}
+					$sql = '
+						SELECT 
+							*,
+							(SELECT COUNT(*) as mid FROM `user_job_transactions` WHERE `user_job_transactions`.`categoryid` = `user_jobs`.`id` ) AS qty
+						FROM 
+							`user_jobs` '.$add;
+				}
+				elseif($num === 8)
+				{
+					if(isset($id) && $id !== NULL)
+					{
+						$add = 'WHERE  `id` = '.$id;
+					}
+					else{
+						$ctn = '';
+						if(isset($query['categoryid']))
+						{
+							$ctn .= " `categoryid` = ".$query['categoryid']." ";
+						}
+						if(isset($query['is_active']))
+						{
+							$ctn .= strlen($ctn) > 0 ? '  AND ':'';
+							$ctn .= " `is_active` = ".$query['is_active']." ";
+						}
+						if(isset($query['is_delete']))
+						{
+							$ctn .= strlen($ctn) > 0 ? '  AND ':'';
+							$ctn .= " `is_delete` = ".$query['is_delete']." ";
+						}
+						if(isset($query['locationid']))
+						{
+							$ctn .= strlen($ctn) > 0 ? '  AND ':'';
+							$ctn .= " `locationid` = ".$query['locationid']." ";
+						}
+						$add = 'WHERE '.$ctn;
+					}
+					$sql = '
+						SELECT 
+							*,
+							(SELECT name as nm FROM `user_jobs` WHERE `user_job_transactions`.`categoryid` = `user_jobs`.`id` LIMIT 1 ) AS categoryname
+						FROM 
+							`user_job_transactions` '.$add;
+				}
+				elseif($num === 9)
+				{
+					if(isset($id) && $id !== NULL)
+					{
+						$add = 'WHERE `id` = '.$id;
+					}
+					else
+					{
+						$wh = '';
+						
+						if(isset($query['staffid']) &&  $query['staffid'] !== '')
+						{
+							$wh .= ' `user_job_transactions`.`staffid` = '.$query['staffid'];
+
+						}
+						
+						$add = strlen($wh) > 0 ? ' WHERE ' : '';
+						$add .= $wh;
+					}
+					
+						
+					
+					$sql = '
+						SELECT 
+							*
+						FROM 
+							`user_job_transactions` '.$add.' order by date_created DESC';;
+				}
+				elseif($num === 12)
+				{
+					if(isset($id) && $id !== NULL)
+					{
+						$add = 'WHERE `id` = '.$id;
+					}
+					else
+					{
+						$wh = '';
+						if(isset($query['starts']) && isset($query['ends']) && $query['starts'] !== NULL && $query['starts'] !== '' && $query['ends'] !== NULL && $query['ends'] !== '')
+						{
+							$wh .= ' `user_leave_transactions`.`date_created` BETWEEN CAST("'.$query['starts'].'" AS DATE) AND CAST("'.$query['ends'].'" AS DATE) ';
+						}
+						if(isset($query['staffid']) &&  $query['staffid'] !== '')
+						{
+							$wh .= strlen($wh) > 0 ? ' AND ' : '';
+							$wh .= ' `user_leave_transactions`.`staffid` = '.$query['staffid'];
+
+						}
+						if(isset($query['is_approved']) &&  $query['is_approved'] !== '')
+						{
+							$wh .= strlen($wh) > 0 ? ' AND ' : '';
+							$wh .= ' `user_leave_transactions`.`is_approved` = '.$query['is_approved'];
+
+						}
+						
+						$add = strlen($wh) > 0 ? ' WHERE ' : '';
+						$add .= $wh;
+					}
+					
+						
+					
+					$sql = '
+						SELECT 
+							*,
+							(SELECT surname as nm FROM `user_types` WHERE `user_leave_transactions`.`staffid` = `user_types`.`id` LIMIT 1 ) AS surname,
+							(SELECT firstname as nm FROM `user_types` WHERE `user_leave_transactions`.`staffid` = `user_types`.`id` LIMIT 1 ) AS firstname
+
+						FROM 
+							`user_leave_transactions` '.$add.' order by date_created DESC';
+				}
+				elseif($num === 11)
+				{
+					$add = '';
+					if(isset($id) && $id !== NULL)
+					{
+						$add = 'WHERE `id` = '.$id;
+					}
+					else
+					{
+						$wh = '';
+						if(isset($query['staffid']) &&  $query['staffid'] !== '')
+						{
+							$wh .= strlen($wh) > 0 ? ' AND ' : '';
+							$wh .= ' `user_job_transactions`.`staffid` = '.$query['staffid'];
+
+						}
+						if(isset($query['categoryid']) &&  $query['categoryid'] !== '')
+						{
+							$wh .= strlen($wh) > 0 ? ' AND ' : '';
+							$wh .= ' `user_job_transactions`.`categoryid` = '.$query['categoryid'];
+
+						}
+						
+						$add = strlen($wh) > 0 ? ' WHERE ' : '';
+						$add .= $wh;
+					}
+					
+						
+					
+					$sql = '
+						SELECT 
+							*,
+							(SELECT surname as nm FROM `user_types` WHERE `user_job_transactions`.`staffid` = `user_types`.`id` LIMIT 1 ) AS surname,
+							(SELECT firstname as nm FROM `user_types` WHERE `user_job_transactions`.`staffid` = `user_types`.`id` LIMIT 1 ) AS firstname,
+							(SELECT name as nm FROM `user_jobs` WHERE `user_job_transactions`.`categoryid` = `user_jobs`.`id` LIMIT 1 ) AS jobname
+
+						FROM 
+							`user_job_transactions` '.$add.' order by date_created DESC';;
+				}
 
 	  			if($id)
 				{
@@ -1109,172 +614,95 @@ class DB extends DbControl
 		}
 		
 	}
+	public function selectNotification($date, $table, $col)
+	{
+		try{
+		
+			$sql = '
+			SELECT 
+				COUNT(id) as id			
+			FROM 
+				`'.$table.'` 
+			WHERE 
+				`'.$table.'`.`'.$col.'` > CAST("'.$date.'" AS DATE) 
+				 ';
+
+			$dbh = $this->construct();	
+			$sth = $dbh->query($sql);
+			while ($row = $sth->fetch(PDO::FETCH_OBJ))
+			return $row;
+		}catch (PDOException $e){
+				$msg = $db.":";
+				$msg .=  ("getMessage(): " . $e->getMessage() . "\n");
+				return $msg;
+		}
+
+	}
+	public function selectuserstatistics($date, $num, $location = null)
+	{
+		if(isset($location) && $location !== NULL && $location !== 3)
+		{
+			$add = 'WHERE `user_types`.`is_delete` = 0 AND `locationid` = '.$locationid;
+		}
+		else{$add = 'WHERE `user_types`.`is_delete` = 0';}
+		
+		try
+		{
+				if($num === 1)
+				{
+					 $sql = '
+						SELECT 
+							categoryid,
+							`user_categorys`.`name` AS categoryname,
+							COUNT(`user_types`.`id`) AS num
+							
+						FROM 
+							`user_types`
+						LEFT JOIN 
+							`user_categorys`
+						ON 
+							`user_types`.`categoryid` = `user_categorys`.`id`
+						'.$add.'
+						GROUP BY categoryid ';						
+				}
+				if($num === 2)
+				{
+					$sql = '
+						SELECT 
+							gender,
+							COUNT(`user_types`.`id`) AS num
+							
+						FROM 
+							`user_types`
+						LEFT JOIN 
+							`user_categorys`
+						ON 
+							`user_types`.`categoryid` = `user_categorys`.`id`
+						 '.$add.'
+						GROUP BY gender ';					
+				}
+
+				$rows = array();
+				$dbh = $this->construct();	
+				$sth = $dbh->query($sql);
+				while ($row = $sth->fetch(PDO::FETCH_OBJ))
+				{
+					array_push($rows, $row);
+				}
+				return $rows;
+				
+			
+				
+		}
+		catch (PDOException $e)
+		{
+		$msg = $db.":";
+		$msg .=  ("getMessage(): " . $e->getMessage() . "\n");
+		return $msg;
+		}
+		
+	}
 	
-	public function selectuserstatistics($date, $num)
-	{
-		
-		try
-		{
-				if($num === 1)
-				{
-					$sql = '
-						SELECT 
-							COUNT(id) AS staffnum,
-							(SELECT name as nm FROM `user_categorys` WHERE `user_types`.`categoryid` = `user_categorys`.`id` LIMIT 1 ) AS categoryname
-						FROM 
-							`user_types`
-						WHERE
-							`user_types`.`is_delete` = 0
-						GROUP BY categoryid ';
-						
-				}
-				if($num === 2)
-				{
-					$sql = '
-						SELECT 
-							COUNT(id) AS staffnum,
-							gender
-						FROM 
-							`user_types`
-						WHERE
-							`user_types`.`is_delete` = 0
-						GROUP BY gender';
-						
-				}
-
-				if($num === 2)
-				{
-					$sql = '
-						SELECT 
-							COUNT(`room_transactions`.`id`) AS id,
-							MONTH(`room_transactions`.`transaction_date`) AS month,
-							YEAR(`room_transactions`.`transaction_date`) AS year,
-							SUM(`room_transactions`.`id`) AS duration,
-							(SELECT COUNT(id) AS num FROM room_types) AS roomnum
-						FROM 
-							`room_transactions` 
-						WHERE `room_transactions`.`transaction_date` BETWEEN CAST("'.$date['startdate'].'" AS DATE) AND CAST("'.$date['enddate'].'" AS DATE)
-						GROUP BY 
-							 YEAR(`room_transactions`.`transaction_date`), MONTH(`room_transactions`.`transaction_date`)';
-				}
-				
-				
-
-	  			
-					$rows = array();
-					$dbh = $this->construct();	
-					$sth = $dbh->query($sql);
-					while ($row = $sth->fetch(PDO::FETCH_OBJ))
-					{
-						array_push($rows, $row);
-					}
-					return $rows;
-				
-			
-				
-		}
-		catch (PDOException $e)
-		{
-		$msg = $db.":";
-		$msg .=  ("getMessage(): " . $e->getMessage() . "\n");
-		return $msg;
-		}
-		
-	}
-	public function selectmaintenancestatistics($date, $num)
-	{
-		
-		try
-		{
-		
-				if($num === 1)
-				{
-					$sql = '
-					     SELECT 
-					     		COUNT(`P`.`sid`) AS num,
-					     		`P`.`categoryid`,
-					     		(SELECT name AS NM FROM `maintenance_categorys` WHERE `maintenance_categorys`.`id` =`P`.`categoryid` LIMIT 1) AS categoryname
-					     FROM 
-							(SELECT 
-								`maintenance_transactions`.`id` as sid,
-								`maintenance_types`.`categoryid` as categoryid
-								
-							FROM 
-								`maintenance_transactions`
-							LEFT JOIN
-								`maintenance_types` 
-							ON  
-							`maintenance_transactions`.`maintenanceid` = `maintenance_types` .`id`
-							WHERE 
-							`maintenance_transactions`.`transaction_date` BETWEEN CAST("'.$date['startdate'].'" AS DATE) AND CAST("'.$date['enddate'].'" AS DATE) ) AS P
-						GROUP BY 
-							categoryid
-							 ';
-				}
-				if($num === 2)
-				{
-					$sql = '
-						SELECT 
-							COUNT(`id`) AS num,
-							status
-						FROM 
-							`maintenance_transactions` 
-						WHERE `maintenance_transactions`.`transaction_date` BETWEEN CAST("'.$date['startdate'].'" AS DATE) AND CAST("'.$date['enddate'].'" AS DATE)
-						GROUP BY 
-							status
-							 ';
-				}
-				if($num === 3)
-				{
-					$sql = '
-						SELECT 
-							COUNT(`id`) AS num,
-							is_completed
-						FROM 
-							`maintenance_transactions` 
-						WHERE `maintenance_transactions`.`transaction_date` BETWEEN CAST("'.$date['startdate'].'" AS DATE) AND CAST("'.$date['enddate'].'" AS DATE)
-						GROUP BY 
-							is_completed
-							 ';
-				}
-				
-				if($num === 4)
-				{
-					$sql = '
-						SELECT 
-							COUNT(`maintenance_transactions`.`id`) AS maintenancenum,
-							MONTH(`maintenance_transactions`.`transaction_date`) AS month,
-							YEAR(`maintenance_transactions`.`transaction_date`) AS year,
-							AVG(`maintenance_transactions`.`resolutiontime`) AS num,
-							(SELECT COUNT(id) AS num FROM maintenance_types) AS maintenancenumS
-						FROM 
-							`maintenance_transactions` 
-						WHERE `maintenance_transactions`.`transaction_date` BETWEEN CAST("'.$date['startdate'].'" AS DATE) AND CAST("'.$date['enddate'].'" AS DATE)
-						GROUP BY 
-							 YEAR(`maintenance_transactions`.`transaction_date`), MONTH(`maintenance_transactions`.`transaction_date`)';
-				}
-
-	  			
-					$rows = array();
-					$dbh = $this->construct();	
-					$sth = $dbh->query($sql);
-					while ($row = $sth->fetch(PDO::FETCH_OBJ))
-					{
-						array_push($rows, $row);
-					}
-					return $rows;
-				
-			
-				
-		}
-		catch (PDOException $e)
-		{
-		$msg = $db.":";
-		$msg .=  ("getMessage(): " . $e->getMessage() . "\n");
-		return $msg;
-		}
-		
-	}
 	public function selected($table , $id = NULL, $where  = NULL,  $orderby  = NULL, $groupby  = NULL)
 	{
 		
