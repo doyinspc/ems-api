@@ -28,7 +28,7 @@ if($_SERVER['REQUEST_METHOD'] === 'GET')
 	$cat = $queries['cat'];
 	$table = $queries['table'] ;
 	$token = $queries['token'] ;
-	$narration = $queries['narration'] ;
+	$narration = $queries['narration'];
 	$data = array();
 	
 	if($cat === 'all'){$data = $op->select($table);}
