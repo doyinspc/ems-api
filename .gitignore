@@ -1,0 +1,12 @@
+ems-api/api/admissions/
+ems-api/api/question/
+ems-api/api/report/
+ems-api/api/uploads/
+ems-api/api/staffs/
+ems-api/api/students/
+ems-api/api/report/
+ems-api/api/schools/
+ems-api/api/staffeducations/
+ems-api/api/staffprofessionals/
+*.csv
+*.zip
