@@ -4,10 +4,10 @@ include '../connect/common.php';
 include '../connect/connect.php';
 $op = new Db;
 
-
+$cnts = 5000;
 $row = 1;
  $rw = array();
-if (($handle = fopen("combine.csv", "r")) !== FALSE) {
+if (($handle = fopen("lasr.csv", "r")) !== FALSE) {
   while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
     $num = count($data);
     //echo "<p> $num fields in line $row: <br /></p>\n";
@@ -27,29 +27,49 @@ if (($handle = fopen("combine.csv", "r")) !== FALSE) {
     	}else{
     		$r = '';
     	}
-    	$db =isset($data[7]) ? explode('/', $data[7]) : explode('/', '20/11/2020');
+
+    	$dbz = isset($data[1]) ? explode(' ', $data[1]) : '';
+    	$db = isset($data[7]) ? explode('/', $data[7]) : explode('/', '11/11/2020');
     	//print_r($db);
         $d = $db[2].'-'.$db[1].'-'.$db[0];
+        $adm = strlen($data[1]) > 0 ? trim($data[1]) : 'NONE';
+        if($adm == 'NONE')
+        {
+        	$adm = 'XX'.++$cnts;
+        }
+
+        $adm1 = $data[0]."_".$adm;
        
-		$rw[$row]['admission_no'] = strlen($data[1]) == 4 ? trim($data[1]) : 'NONE';
+		$rw[$row]['admission_no'] = $adm;
+		$rw[$row]['admission_nox'] = $adm1;
+		//$rw[$row]['surname'] = ucfirst(strtolower($dbz[0]));
+		//$rw[$row]['firstname'] = ucfirst(strtolower($dbz[1]));
+		//$rw[$row]['middlename'] = ucfirst(strtolower($dbz[2]));
 		$rw[$row]['surname'] = ucfirst(strtolower($data[2]));
 		$rw[$row]['firstname'] = ucfirst(strtolower($data[3]));
 		$rw[$row]['middlename'] = ucfirst(strtolower($data[4]));
 		$rw[$row]['gender'] = ucfirst(strtolower($data[5]));
 		$rw[$row]['religion'] = trim(ucfirst(strtolower($data[6])));
 		$rw[$row]['dob'] = $d;
-		$rw[$row]['schoolid'] = 1;
+		$rw[$row]['schoolid'] = $data[0];
 		$rw[$row]['soo'] = trim(ucfirst(strtolower($data[8])));
 		$rw[$row]['lga'] = ucfirst(strtolower($data[9]));
 		$rw[$row]['cclass'] = strtolower($data[10]);
-		//$rw[$row]['g1_name'] = ucwords(strtolower($data[11]));
-		//$rw[$row]['g1_rel'] = ucfirst(strtolower($data[12]));
-		//$rw[$row]['g1_phone'] = $r;
-		//$rw[$row]['g1_email'] = strlen($data[14]) > 5 ?  strtolower($data[14]): '';
-		//$rw[$row]['g1_place'] = $data[15];
-		//$rw[$row]['g1_address'] = $data[16];
+		$rw[$row]['g1_name'] = ucwords(strtolower($data[11]));
+		$rw[$row]['g1_rel'] = ucfirst(strtolower($data[12]));
+		$rw[$row]['g1_phone1'] = $r;
+		$rw[$row]['g1_email'] = strlen($data[14]) > 5 ?  strtolower($data[14]): '';
+		$rw[$row]['g1_place'] = strtoupper($data[15]);
+		$rw[$row]['g1_address'] = strtoupper($data[16]);
 
-	echo $op->insert('students', $rw[$row]);
+		print_r($rw[$row]);
+     // $sel = $op->selectOne('students', NULL, array('admission_nox' =>$adm1));
+      //if(isset($sel) && $sel->id > 0)
+      //{
+      	//echo $data[2];
+      	//$op->update('students', array('cclass' => strtolower($data[2])),array('id' =>$sel->id));
+      //}
+	//echo $op->insert('students', $rw[$row]);
 		$row++;
 
   }

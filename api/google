@@ -1,0 +1,121 @@
+function updateForm(){
+  var form1 = FormApp.openById("17cYzAou-J8kEwhLTdEg8iD2u9efNQxq8rB8PxfGsA70");
+  var form2 = FormApp.openById("1PQwq9PXQxOBmXDIhIdsxY9loyr9Z3jRvELviG1XYTUs");
+  var form3 = FormApp.openById("1KvYkl_w2Bkmk9lTl0qGUG2Ut55OWtDDLnp3nuPKbBXk");
+
+  var names1List0 = form1.getItemById("1280101747").asListItem();
+  var names1List1 = form1.getItemById("1278265885").asListItem();
+  var names1List2 = form1.getItemById("1580952842").asListItem();
+  var names1List3 = form1.getItemById("1976593668").asListItem();
+  var names1List4 = form1.getItemById("706243981").asListItem();
+  var names1List5 = form1.getItemById("2008530977").asListItem();
+  var names1List6 = form1.getItemById("1174156775").asListItem();
+  var names1List7 = form1.getItemById("1965243363").asListItem();
+  var names1List8 = form1.getItemById("1460122974").asListItem();
+  var names1List9 = form1.getItemById("673054583").asListItem();
+  var names1List10 = form1.getItemById("414819734").asListItem();
+  var names1List11 = form1.getItemById("387086930").asListItem();
+  var names1List12 = form1.getItemById("1280101747").asListItem();
+
+  var names2List0 = form2.getItemById("1962605481").asListItem();
+  var names2List1 = form2.getItemById("387086930").asListItem();
+  var names2List2 = form2.getItemById("1280101747").asListItem();
+  var names2List3 = form2.getItemById("1278265885").asListItem();
+  var names2List4 = form2.getItemById("1580952842").asListItem();
+  var names2List5 = form2.getItemById("1976593668").asListItem();
+  var names2List6 = form2.getItemById("706243981").asListItem();
+  var names2List7 = form2.getItemById("2008530977").asListItem();
+  var names2List8 = form2.getItemById("1174156775").asListItem();
+  var names2List9 = form2.getItemById("1965243363").asListItem();
+  var names2List10 = form2.getItemById("1460122974").asListItem();
+  var names2List11 = form2.getItemById("673054583").asListItem();
+  var names2List12 = form2.getItemById("414819734").asListItem();
+
+
+  var names3List0 = form3.getItemById("1962605481").asListItem();
+  var names3List1 = form3.getItemById("387086930").asListItem();
+  var names3List2 = form3.getItemById("1280101747").asListItem();
+  var names3List3 = form3.getItemById("1278265885").asListItem();
+  var names3List4 = form3.getItemById("1580952842").asListItem();
+  var names3List5 = form3.getItemById("1976593668").asListItem();
+  var names3List6 = form3.getItemById("706243981").asListItem();
+  var names3List7 = form3.getItemById("2008530977").asListItem();
+  var names3List8 = form3.getItemById("1174156775").asListItem();
+  var names3List9 = form3.getItemById("1965243363").asListItem();
+  var names3List10 = form3.getItemById("1460122974").asListItem();
+  var names3List11 = form3.getItemById("673054583").asListItem();
+  var names3List12 = form3.getItemById("414819734").asListItem();
+
+  var ss = SpreadsheetApp.getActive();
+
+  var names1 = ss.getSheetByName("JEBBA SEC");
+  var names1Values = names1.getRange(1, 1, names1.getMaxRows() - 1).getValues();
+  var studentNames1 = [];
+  for(var i = 0; i < names1Values.length; i++)   
+    if(names1Values[i][0] != "")
+      studentNames1[i] = names1Values[i][0];
+
+  // populate the drop-down with the array data
+  names1List0.setChoiceValues(studentNames1);
+  names1List1.setChoiceValues(studentNames1);
+  names1List2.setChoiceValues(studentNames1);
+  names1List3.setChoiceValues(studentNames1);
+  names1List4.setChoiceValues(studentNames1);
+  names1List5.setChoiceValues(studentNames1);
+  names1List6.setChoiceValues(studentNames1);
+  names1List7.setChoiceValues(studentNames1);
+  names1List8.setChoiceValues(studentNames1);
+  names1List9.setChoiceValues(studentNames1);
+  names1List10.setChoiceValues(studentNames1);
+  names1List11.setChoiceValues(studentNames1);
+  names1List12.setChoiceValues(studentNames1);
+
+
+
+  var names2 = ss.getSheetByName("JEBBA PRI 1");
+  var names2Values = names2.getRange(1, 1, names2.getMaxRows() - 1).getValues();
+  var studentNames2 = [];
+  for(var i = 0; i < names2Values.length; i++)   
+    if(names2Values[i][0] != "")
+      studentNames2[i] = names2Values[i][0];
+
+  // populate the drop-down with the array data
+  names2List0.setChoiceValues(studentNames2);
+  names2List1.setChoiceValues(studentNames2);
+  names2List2.setChoiceValues(studentNames2);
+  names2List3.setChoiceValues(studentNames2);
+  names2List4.setChoiceValues(studentNames2);
+  names2List5.setChoiceValues(studentNames2);
+  names2List6.setChoiceValues(studentNames2);
+  names2List7.setChoiceValues(studentNames2);
+  names2List8.setChoiceValues(studentNames2);
+  names2List9.setChoiceValues(studentNames2);
+  names2List10.setChoiceValues(studentNames2);
+  names2List11.setChoiceValues(studentNames2);
+  names2List12.setChoiceValues(studentNames2);
+
+
+
+   var names3 = ss.getSheetByName("JEBBA PRI 2");
+  var names3Values = names3.getRange(1, 1, names3.getMaxRows() - 1).getValues();
+  var studentNames3 = [];
+  for(var i = 0; i < names3Values.length; i++)   
+    if(names3Values[i][0] != "")
+      studentNames3[i] = names3Values[i][0];
+
+  // populate the drop-down with the array data
+  names3List0.setChoiceValues(studentNames3);
+  names3List1.setChoiceValues(studentNames3);
+  names3List2.setChoiceValues(studentNames3);
+  names3List3.setChoiceValues(studentNames3);
+  names3List4.setChoiceValues(studentNames3);
+  names3List5.setChoiceValues(studentNames3);
+  names3List6.setChoiceValues(studentNames3);
+  names3List7.setChoiceValues(studentNames3);
+  names3List8.setChoiceValues(studentNames3);
+  names3List9.setChoiceValues(studentNames3);
+  names3List10.setChoiceValues(studentNames3);
+  names3List11.setChoiceValues(studentNames3);
+  names3List12.setChoiceValues(studentNames3);
+ 
+}

@@ -31,12 +31,12 @@ if (($handle = fopen("admission.csv", "r")) !== FALSE) {
 		$rw[$row]['middlename'] = strtoupper(trim($db[2]));
 		$rw[$row]['cclass'] = $data[10];
 		$rw[$row]['schoolid'] = $data[9];
-		$rw[$row]['session'] = '2020';
+		$rw[$row]['session'] = '2020/2021';
 		$rw[$row]['address'] = $data[2];
 		$rw[$row]['status'] = $data[8];
 
 
-		echo $op->insert('admissions', $rw[$row]);
+		//echo $op->insert('admissions', $rw[$row]);
 		$row++;
 
   }

@@ -1,4 +1,0 @@
-SetEnv DB_USER "root"
-SetEnv DB_PASSWD ""
-SetEnv DB_NAME "cbt"
-SetEnv DB_HOST "localhost"
